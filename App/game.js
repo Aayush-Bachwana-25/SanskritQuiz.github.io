@@ -11,44 +11,73 @@ let score = 0;
 let questionCounter = 0;
 let availableQuesions = [];
 
-let questions = [];
+let questions = [
+        {
+          question: "संस्कृत वर्णमाला में वर्ण कितने प्रकार के होते है?",
+          choice1: "दो",
+          choice2: "तीन",
+          choice3: "चार",
+          choice4: "पाँच ",
+          answer: 1
+        },
+        {
+          question: " संस्कृत वर्णमाला में स्वरों की संख्या होती है?",
+          choice1: "13",
+          choice2: "14",
+          choice3: "15",
+          choice4: "16",
+          answer: 1
+        },
+        {
+          question: "संस्कृत वर्णमाला में व्यंजनों की संख्या होती है?",
+          choice1: "30",
+          choice2: "33",
+          choice3: "35",
+          choice4: "40",
+          answer: 2
+        },
+        
+        {
+            question: "भाषा की सबसे छोटी ईकाई हैं?",
+            choice1: "स्वर",
+            choice2: "वर्ण",
+            choice3: "व्यंजन",
+            choice4: "भाषा",
+            answer: 2
+          },
 
-fetch(
-    'https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple'
-)
-    .then((res) => {
-        return res.json();
-    })
-    .then((loadedQuestions) => {
-        questions = loadedQuestions.results.map((loadedQuestion) => {
-            const formattedQuestion = {
-                question: loadedQuestion.question,
-            };
+          {
+            question: "वर्णो के व्यवस्थित समूह को कहते हैं?",
+            choice1: "व्यंजन",
+            choice2: "स्वर",
+            choice3: "क व ख दोनों",
+            choice4: "वर्णमाला",
+            answer: 4
+          },
 
-            const answerChoices = [...loadedQuestion.incorrect_answers];
-            formattedQuestion.answer = Math.floor(Math.random() * 4) + 1;
-            answerChoices.splice(
-                formattedQuestion.answer - 1,
-                0,
-                loadedQuestion.correct_answer
-            );
+          {
+            question: "दीर्घ स्वर है।",
+            choice1: "ई",
+            choice2: "इ",
+            choice3: "अ",
+            choice4: "उ",
+            answer: 1
+          },
 
-            answerChoices.forEach((choice, index) => {
-                formattedQuestion['choice' + (index + 1)] = choice;
-            });
-
-            return formattedQuestion;
-        });
-
-        startGame();
-    })
-    .catch((err) => {
-        console.error(err);
-    });
+          {
+            question: "दो व्यंजनों के मेल से वर्ण बनते है?",
+            choice1: "अन्तःस्थ वर्ण",
+            choice2: "संयुक्त वर्ण",
+            choice3: "स्पर्श वर्ण",
+            choice4: "सशक्त वर्ण",
+            answer: 2
+          },
+      
+];
 
 //CONSTANTS
 const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = 3;
+const MAX_QUESTIONS = 7;
 
 startGame = () => {
     questionCounter = 0;
@@ -60,11 +89,13 @@ startGame = () => {
 };
 
 getNewQuestion = () => {
-    if (availableQuesions.length === 0 || questionCounter >= MAX_QUESTIONS) {
+    if (availableQuesions.length === 0 || questionCounter >= MAX_QUESTIONS)
+     {
         localStorage.setItem('mostRecentScore', score);
         //go to the end page
         return window.location.assign('end.html');
     }
+
     questionCounter++;
     progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`;
     //Update the progress bar
@@ -72,16 +103,18 @@ getNewQuestion = () => {
 
     const questionIndex = Math.floor(Math.random() * availableQuesions.length);
     currentQuestion = availableQuesions[questionIndex];
-    question.innerHTML = currentQuestion.question;
+    question.innerText = currentQuestion.question;
 
     choices.forEach((choice) => {
         const number = choice.dataset['number'];
-        choice.innerHTML = currentQuestion['choice' + number];
+        choice.innerText = currentQuestion['choice' + number];
     });
 
     availableQuesions.splice(questionIndex, 1);
     acceptingAnswers = true;
 };
+
+startGame();
 
 choices.forEach((choice) => {
     choice.addEventListener('click', (e) => {
